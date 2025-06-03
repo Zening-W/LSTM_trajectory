@@ -1,1 +1,1 @@
-Seq2Seq LSTM for Trajectory Prediction
+**Seq2Seq LSTM for Trajectory Prediction**

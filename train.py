@@ -382,7 +382,7 @@ if __name__ == '__main__':
     # Evaluate on the excluded test file
     evaluate()
     
-    # test()
+    #test()
 
             
 

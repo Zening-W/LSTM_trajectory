@@ -32,7 +32,7 @@ class DecoderLSTM(nn.Module):
 
         h_t = h_n
         c_t = c_n
-        x_t = x_0[:, torch.newaxis, :] # (N, 1, F)
+        x_t = x_0.unsqueeze(1)  # (N, 1, F) - equivalent to x_0[:, torch.newaxis, :]
         output = torch.zeros(x_0.shape[0], forecast_window, x_0.shape[1], device=x_0.device) # (N, T, F)
 
         for t in range(forecast_window):

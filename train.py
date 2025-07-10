@@ -275,8 +275,43 @@ def evaluate_model(model_path, test_file):
 
 
 def test():
-    model_path = os.path.join(file_dir, 'runs', 'run_20250707010718', 'best_model_epoch77.pth')
-    test_file = "2024-07-07_2024-07-07_17-00-03"
+    # Use the same logic as evaluate() to find the latest model
+    runs_dir = os.path.join(file_dir, 'runs')
+    run_dirs = [d for d in os.listdir(runs_dir) if d.startswith('run_')]
+    run_dirs.sort()
+    latest_run = run_dirs[-1] if run_dirs else 'run_20250707010718'  # fallback
+    
+    # Find the model with the highest epoch number
+    run_path = os.path.join(file_dir, 'runs', latest_run)
+    model_files = [f for f in os.listdir(run_path) if f.startswith('best_model_epoch') and f.endswith('.pth')]
+    
+    if not model_files:
+        print(f"No model files found in {latest_run}")
+        return
+    
+    # Extract epoch numbers and find the highest
+    epoch_numbers = []
+    for model_file in model_files:
+        try:
+            epoch_num = int(model_file.replace('best_model_epoch', '').replace('.pth', ''))
+            epoch_numbers.append(epoch_num)
+        except ValueError:
+            continue
+    
+    if not epoch_numbers:
+        print(f"No valid model files found in {latest_run}")
+        return
+    
+    highest_epoch = max(epoch_numbers)
+    model_path = os.path.join(file_dir, 'runs', latest_run, f'best_model_epoch{highest_epoch}.pth')
+    
+    # Use the same test file as evaluation (the excluded file)
+    test_file = "2024-07-07_2024-07-07_17-15-00"
+    
+    print(f"Visualizing model from: {latest_run}")
+    print(f"Using epoch: {highest_epoch}")
+    print(f"Visualizing test file: {test_file}")
+    
     visualize(model_path, test_file)
 
 def evaluate():
